@@ -258,6 +258,8 @@ def calculate_streak(completed_dates):
     
     return streak
 
+# Initialize database on app startup (works with both Flask dev server and gunicorn)
+init_db()
+
 if __name__ == '__main__':
-    init_db()
     app.run(debug=True, host='0.0.0.0', port=5000)
