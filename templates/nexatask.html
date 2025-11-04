@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NexaTask Pro - Premium Task Management</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='nexatask.css') }}">
+</head>
+<body>
+    <!-- Page 1: Splash Screen -->
+    <div id="splashScreen" class="page active">
+        <div class="splash-content">
+            <div class="logo-container">
+                <div class="logo-circle">
+                    <svg class="logo-icon" viewBox="0 0 100 100">
+                        <path class="logo-path" d="M20,50 L40,70 L80,30" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </div>
+                <h1 class="logo-text">NexaTask Pro</h1>
+            </div>
+            <div class="loading-bar">
+                <div class="loading-progress"></div>
+            </div>
+            <div class="loading-percentage">0%</div>
+            <div class="feature-highlights">
+                <p class="feature-text"></p>
+            </div>
+            <canvas id="particleCanvas" class="particle-canvas"></canvas>
+        </div>
+    </div>
+
+    <!-- Page 2: Onboarding -->
+    <div id="onboardingScreen" class="page">
+        <div class="onboarding-container">
+            <div class="onboarding-slides">
+                <!-- Slide 1 -->
+                <div class="slide active" data-slide="0">
+                    <div class="slide-illustration">
+                        <div class="hero-animation">
+                            <div class="floating-task">
+                                <div class="task-check"></div>
+                                <div class="task-lines"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="slide-title">Welcome to Productivity</h2>
+                    <p class="slide-subtitle">Organize Your Life Beautifully</p>
+                    <p class="slide-description">Transform how you manage tasks with stunning visuals and powerful features</p>
+                </div>
+                
+                <!-- Slide 2 -->
+                <div class="slide" data-slide="1">
+                    <div class="slide-illustration">
+                        <div class="features-demo">
+                            <div class="demo-card">
+                                <div class="demo-icon">✓</div>
+                                <div class="demo-label">Smart Organization</div>
+                            </div>
+                            <div class="demo-card">
+                                <div class="demo-icon">📊</div>
+                                <div class="demo-label">Analytics</div>
+                            </div>
+                            <div class="demo-card">
+                                <div class="demo-icon">🎨</div>
+                                <div class="demo-label">Customization</div>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="slide-title">Smart Features</h2>
+                    <p class="slide-subtitle">Everything You Need, Nothing You Don't</p>
+                    <p class="slide-description">Categories, priorities, due dates, and beautiful analytics</p>
+                </div>
+                
+                <!-- Slide 3 -->
+                <div class="slide" data-slide="2">
+                    <div class="slide-illustration">
+                        <div class="theme-preview">
+                            <div class="theme-option" data-theme="light">
+                                <div class="theme-circle light"></div>
+                                <span>Light</span>
+                            </div>
+                            <div class="theme-option active" data-theme="dark">
+                                <div class="theme-circle dark"></div>
+                                <span>Dark</span>
+                            </div>
+                            <div class="theme-option" data-theme="auto">
+                                <div class="theme-circle auto"></div>
+                                <span>Auto</span>
+                            </div>
+                        </div>
+                    </div>
+                    <h2 class="slide-title">Get Started</h2>
+                    <p class="slide-subtitle">Choose Your Style</p>
+                    <p class="slide-description">Customize your experience to match your workflow</p>
+                </div>
+            </div>
+            
+            <div class="onboarding-navigation">
+                <div class="progress-dots">
+                    <span class="dot active"></span>
+                    <span class="dot"></span>
+                    <span class="dot"></span>
+                </div>
+                <button class="btn-onboarding-skip" id="skipOnboarding">Skip</button>
+                <button class="btn-onboarding-next" id="nextSlide">Next</button>
+                <button class="btn-onboarding-start" id="startApp" style="display:none;">Start Using NexaTask</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Page 3: Main Dashboard -->
+    <div id="dashboardScreen" class="page">
+        <div class="app-container">
+            <!-- Header -->
+            <header class="app-header">
+                <div class="header-left">
+                    <div class="app-logo-small">NT</div>
+                    <div class="header-info">
+                        <h1 class="greeting" id="greeting">Good Morning</h1>
+                        <p class="current-date" id="currentDate"></p>
+                    </div>
+                </div>
+                <div class="header-center">
+                    <div class="quick-stats">
+                        <div class="stat-item">
+                            <span class="stat-number" id="statTotal">0</span>
+                            <span class="stat-label">Total</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="statCompleted">0</span>
+                            <span class="stat-label">Done</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number" id="statPending">0</span>
+                            <span class="stat-label">Pending</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="header-right">
+                    <button class="icon-btn" id="viewModeBtn" title="View Mode">
+                        <span>⊞</span>
+                    </button>
+                    <button class="icon-btn" id="themeToggle" title="Theme">
+                        <span>◐</span>
+                    </button>
+                    <div class="user-avatar" id="userMenu">
+                        <span>U</span>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Navigation -->
+            <nav class="app-nav">
+                <button class="nav-btn active" data-view="tasks">
+                    <span class="nav-icon">✓</span>
+                    <span>Tasks</span>
+                </button>
+                <button class="nav-btn" data-view="analytics">
+                    <span class="nav-icon">📊</span>
+                    <span>Analytics</span>
+                </button>
+                <button class="nav-btn" data-view="settings">
+                    <span class="nav-icon">⚙</span>
+                    <span>Settings</span>
+                </button>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="app-main">
+                <!-- Task View -->
+                <div class="view active" id="tasksView">
+                    <!-- Task Input -->
+                    <div class="task-input-section">
+                        <div class="input-wrapper">
+                            <input type="text" id="quickTaskInput" placeholder="Add a new task..." class="quick-input">
+                            <button class="btn-add-quick" id="addQuickTask">
+                                <span>+</span>
+                            </button>
+                        </div>
+                        <button class="btn-add-detailed" id="openTaskModal">
+                            <span>+ Detailed Task</span>
+                        </button>
+                    </div>
+
+                    <!-- Filters -->
+                    <div class="task-filters">
+                        <button class="filter-chip active" data-filter="all">All</button>
+                        <button class="filter-chip" data-filter="pending">Pending</button>
+                        <button class="filter-chip" data-filter="completed">Completed</button>
+                        <button class="filter-chip" data-filter="high">High Priority</button>
+                    </div>
+
+                    <!-- Task List -->
+                    <div class="tasks-container" id="tasksContainer">
+                        <!-- Empty State -->
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-illustration">
+                                <div class="empty-circle">
+                                    <span class="empty-icon">✓</span>
+                                </div>
+                            </div>
+                            <h3>No tasks yet!</h3>
+                            <p>Create your first task to get started on your productivity journey</p>
+                            <button class="btn-primary" onclick="document.getElementById('openTaskModal').click()">
+                                Create Your First Task
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Productivity Widget -->
+                    <div class="productivity-widget">
+                        <div class="widget-header">
+                            <h3>Today's Progress</h3>
+                        </div>
+                        <div class="progress-ring-container">
+                            <svg class="progress-ring" viewBox="0 0 120 120">
+                                <circle class="ring-background" cx="60" cy="60" r="50"/>
+                                <circle class="ring-progress" cx="60" cy="60" r="50" id="progressCircle"/>
+                            </svg>
+                            <div class="ring-text">
+                                <span class="ring-percentage" id="todayPercentage">0%</span>
+                                <span class="ring-label">Complete</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics View -->
+                <div class="view" id="analyticsView">
+                    <div class="analytics-header">
+                        <h2>Analytics & Insights</h2>
+                        <p>Track your productivity patterns</p>
+                    </div>
+
+                    <div class="analytics-grid">
+                        <!-- Overview Cards -->
+                        <div class="analytics-card">
+                            <div class="card-icon">📈</div>
+                            <div class="card-content">
+                                <h3 id="completionRate">0%</h3>
+                                <p>Completion Rate</p>
+                            </div>
+                            <div class="card-trend up">↑ 12%</div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="card-icon">🔥</div>
+                            <div class="card-content">
+                                <h3 id="streakDays">0</h3>
+                                <p>Day Streak</p>
+                            </div>
+                            <div class="streak-flame"></div>
+                        </div>
+
+                        <div class="analytics-card">
+                            <div class="card-icon">⏱</div>
+                            <div class="card-content">
+                                <h3 id="avgCompletion">2.5h</h3>
+                                <p>Avg. Completion Time</p>
+                            </div>
+                        </div>
+
+                        <!-- Charts -->
+                        <div class="analytics-card chart-card">
+                            <h4>Weekly Activity</h4>
+                            <div class="bar-chart" id="weeklyChart">
+                                <div class="bar" style="height: 60%"><span>Mon</span></div>
+                                <div class="bar" style="height: 80%"><span>Tue</span></div>
+                                <div class="bar" style="height: 45%"><span>Wed</span></div>
+                                <div class="bar" style="height: 90%"><span>Thu</span></div>
+                                <div class="bar" style="height: 70%"><span>Fri</span></div>
+                                <div class="bar" style="height: 30%"><span>Sat</span></div>
+                                <div class="bar" style="height: 20%"><span>Sun</span></div>
+                            </div>
+                        </div>
+
+                        <div class="analytics-card chart-card">
+                            <h4>Categories</h4>
+                            <div class="category-breakdown" id="categoryBreakdown">
+                                <!-- Dynamic categories -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Settings View -->
+                <div class="view" id="settingsView">
+                    <div class="settings-header">
+                        <h2>Settings</h2>
+                        <p>Customize your experience</p>
+                    </div>
+
+                    <div class="settings-sections">
+                        <!-- Theme -->
+                        <div class="settings-section">
+                            <h3>Appearance</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Theme</span>
+                                    <span class="setting-description">Choose your preferred color scheme</span>
+                                </div>
+                                <div class="theme-selector">
+                                    <button class="theme-btn active" data-theme="light">☀ Light</button>
+                                    <button class="theme-btn" data-theme="dark">🌙 Dark</button>
+                                    <button class="theme-btn" data-theme="auto">⚡ Auto</button>
+                                </div>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Primary Color</span>
+                                    <span class="setting-description">Customize your accent color</span>
+                                </div>
+                                <div class="color-picker">
+                                    <input type="color" id="primaryColor" value="#667eea">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- View Options -->
+                        <div class="settings-section">
+                            <h3>Layout</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">View Mode</span>
+                                    <span class="setting-description">How tasks are displayed</span>
+                                </div>
+                                <select id="viewModeSelect" class="settings-select">
+                                    <option value="list">List View</option>
+                                    <option value="grid">Grid View</option>
+                                    <option value="compact">Compact View</option>
+                                </select>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Animation Intensity</span>
+                                    <span class="setting-description">Control animation speed</span>
+                                </div>
+                                <select id="animationIntensity" class="settings-select">
+                                    <option value="reduced">Reduced</option>
+                                    <option value="normal" selected>Normal</option>
+                                    <option value="enhanced">Enhanced</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Notifications -->
+                        <div class="settings-section">
+                            <h3>Notifications</h3>
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Desktop Notifications</span>
+                                    <span class="setting-description">Get notified about tasks</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="notificationsToggle">
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+
+                            <div class="setting-item">
+                                <div class="setting-info">
+                                    <span class="setting-label">Sound Effects</span>
+                                    <span class="setting-description">Play sounds for actions</span>
+                                </div>
+                                <label class="toggle-switch">
+                                    <input type="checkbox" id="soundToggle" checked>
+                                    <span class="toggle-slider"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Data -->
+                        <div class="settings-section">
+                            <h3>Data Management</h3>
+                            <div class="setting-item">
+                                <button class="btn-secondary" id="exportData">
+                                    📥 Export All Data
+                                </button>
+                                <button class="btn-danger" id="clearAllData">
+                                    🗑 Clear All Data
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Page 4: Task Creation Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Create New Task</h3>
+                <button class="modal-close" id="closeModal">×</button>
+            </div>
+            <div class="modal-body">
+                <!-- Basic Info -->
+                <div class="form-section">
+                    <label class="form-label">
+                        Title <span class="required">*</span>
+                        <span class="char-counter"><span id="titleCounter">0</span>/100</span>
+                    </label>
+                    <input type="text" id="taskTitle" class="form-input" maxlength="100" placeholder="Enter task title...">
+                </div>
+
+                <div class="form-section">
+                    <label class="form-label">Description</label>
+                    <textarea id="taskDescription" class="form-textarea" rows="4" placeholder="Add more details..."></textarea>
+                </div>
+
+                <!-- Category -->
+                <div class="form-section">
+                    <label class="form-label">Category</label>
+                    <div class="category-grid">
+                        <button class="category-btn active" data-category="General">
+                            <span class="category-icon">📝</span>
+                            <span>General</span>
+                        </button>
+                        <button class="category-btn" data-category="Work">
+                            <span class="category-icon">💼</span>
+                            <span>Work</span>
+                        </button>
+                        <button class="category-btn" data-category="Personal">
+                            <span class="category-icon">🏠</span>
+                            <span>Personal</span>
+                        </button>
+                        <button class="category-btn" data-category="Shopping">
+                            <span class="category-icon">🛒</span>
+                            <span>Shopping</span>
+                        </button>
+                        <button class="category-btn" data-category="Health">
+                            <span class="category-icon">❤️</span>
+                            <span>Health</span>
+                        </button>
+                        <button class="category-btn" data-category="Learning">
+                            <span class="category-icon">📚</span>
+                            <span>Learning</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Priority -->
+                <div class="form-section">
+                    <label class="form-label">Priority</label>
+                    <div class="priority-selector">
+                        <button class="priority-btn active" data-priority="1">
+                            <span class="priority-dot low"></span>
+                            <span>Low</span>
+                        </button>
+                        <button class="priority-btn" data-priority="2">
+                            <span class="priority-dot medium"></span>
+                            <span>Medium</span>
+                        </button>
+                        <button class="priority-btn" data-priority="3">
+                            <span class="priority-dot high"></span>
+                            <span>High</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Due Date -->
+                <div class="form-section">
+                    <label class="form-label">Due Date</label>
+                    <input type="date" id="taskDueDate" class="form-input">
+                </div>
+
+                <!-- Tags -->
+                <div class="form-section">
+                    <label class="form-label">Tags</label>
+                    <div class="tags-input">
+                        <div class="tags-container" id="tagsContainer"></div>
+                        <input type="text" id="tagInput" placeholder="Add tag..." class="tag-input">
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="cancelTask">Cancel</button>
+                <button class="btn-primary" id="saveTask">Create Task</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="{{ url_for('static', filename='nexatask.js') }}"></script>
+</body>
+</html>
