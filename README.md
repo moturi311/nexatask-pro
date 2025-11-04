@@ -2,6 +2,12 @@
 
 A beautiful, full-stack web application for managing your daily tasks. Built with Flask (Python) backend and vanilla HTML/CSS/JavaScript frontend.
 
+## 🚀 Live Demo
+
+**Try it now**: [https://nexatask-pro.onrender.com/](https://nexatask-pro.onrender.com/)
+
+> Note: Free tier may take ~30 seconds to wake up from sleep mode on first request.
+
 ## Features
 
 - ✅ Add new tasks
